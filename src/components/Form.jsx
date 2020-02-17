@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from '@emotion/styled';
-
 import useCurrency from '../hooks/useCurrency';
+import useCrypto from '../hooks/useCrypto';
+import axios from 'axios';
 
 const Button = styled.input`
     margin-top: 20px;
@@ -22,6 +23,21 @@ const Button = styled.input`
 `;
 
 const Form = () => {
+
+    // state for crypto list
+    const [cryptoList, setCryptoList] = useState([]);
+
+    useEffect(() => {
+        const fetchAPI = async () => {
+            const url = `https://min-api.cryptocompare.com/data/top/mktcapfull?limit=10&tsym=USD`;
+
+            const result = await axios.get(url);
+
+            setCryptoList(result.data.Data);
+        }
+
+        fetchAPI();
+    }, []);
     
     const CURRENCIES = [
         { code: 'USD', name: 'USA Dollar' },
@@ -32,14 +48,16 @@ const Form = () => {
         { code: 'MXN', name: 'Mexican Peso' },
         { code: 'EUR', name: 'Euro currency' },
         { code: 'GBP', name: 'UK Pound' }
-    ]
+    ];
 
     // Use state from useCurrency
     const [currency, SelectCurrency] = useCurrency('Select your currency', '', CURRENCIES);
+    const [crypto, SelectCrypto] = useCrypto('Select your crypto', '', cryptoList);
 
     return (
         <form>
             <SelectCurrency />
+            <SelectCrypto/>
             <Button
                 type="submit"
                 value="Calculate"

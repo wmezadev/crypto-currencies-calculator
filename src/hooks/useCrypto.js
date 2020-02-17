@@ -22,28 +22,28 @@ const Select = styled.select`
 `;
 
 
-const useCurrency = (label, initialState, options) => {
+const useCrypto = (label, initialState, options) => {
     // State to our custom hook
     const [state, setState] = useState(initialState);
 
-    const SelectCur = () => (
+    const SelectCryp = () => (
         <Fragment>
             <Label>{label}</Label>
             <Select
                 onChange={ e => setState(e.target.value)}
                 value={state}
             >
-                <option value="">-- Select Currency --</option>
+                <option value="">-- Select Crypto--</option>
                 { 
                     options.map(option => (
-                        <option value={option.code} key={option.code}>{option.name}</option>
+                        <option value={option.CoinInfo.Name} key={option.CoinInfo.Id}>{option.CoinInfo.FullName}</option>
                     ))
                 }
             </Select>
         </Fragment>
     )
     // Return state, interface and fn that modifies the state
-    return [state, SelectCur, setState];
+    return [state, SelectCryp, setState];
 }
 
-export default useCurrency;
+export default useCrypto;
