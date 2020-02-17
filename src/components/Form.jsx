@@ -26,6 +26,7 @@ const Form = () => {
 
     // state for crypto list
     const [cryptoList, setCryptoList] = useState([]);
+    const [error, setError] = useState(false);
 
     useEffect(() => {
         const fetchAPI = async () => {
@@ -50,12 +51,29 @@ const Form = () => {
         { code: 'GBP', name: 'UK Pound' }
     ];
 
+    const handleSubmit = e => {
+        e.preventDefault();
+
+        // validate fields
+        if(currency === '' || crypto === ''){
+            setError(true);
+            return;
+        }
+        setError(false);
+
+        //Send data to main component
+
+    }
+
     // Use state from useCurrency
     const [currency, SelectCurrency] = useCurrency('Select your currency', '', CURRENCIES);
     const [crypto, SelectCrypto] = useCrypto('Select your crypto', '', cryptoList);
 
     return (
-        <form>
+        <form
+            onSubmit={handleSubmit}
+        >
+            { error ? 'There is an error': null }
             <SelectCurrency />
             <SelectCrypto/>
             <Button
