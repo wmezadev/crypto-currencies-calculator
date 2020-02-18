@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
+import axios from 'axios';
 import image from './crypto-coins.png'
 import Form from './components/Form';
+import Quotation from './components/Quotation';
 
 const Container = styled.div`
   max-width: 900px;
@@ -37,6 +39,32 @@ const Heading = styled.h1`
 `;
 
 function App() {
+
+  const [currency, setCurrency] = useState('');
+  const [crypto, setCrypto] = useState('');
+  const [result, setResult] = useState({});
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const quoteCryptocurrency = async () => {
+      // avoid executes on first load time
+      if(currency === '') return;
+  
+      // fetch quotation API
+      const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${crypto}&tsyms=${currency}`;
+      const result = await axios.get(url);
+
+      // show spinner
+      // set the state of loading
+      await setLoading(false);
+      // set quotation
+      await setResult(result.data.DISPLAY[crypto][currency]);
+
+
+    }
+
+    quoteCryptocurrency();
+  }, [currency, crypto])
   return (
     <Container>
       <div>
@@ -44,7 +72,13 @@ function App() {
       </div>
       <div>
         <Heading> Cryptocurrency Quotes Instantly</Heading>
-        <Form/>
+        <Form
+          setCurrency={setCurrency}
+          setCrypto={setCrypto}
+        />
+        <Quotation
+          result={result}
+        />
       </div>
     </Container>
   );

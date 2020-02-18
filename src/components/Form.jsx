@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import styled from '@emotion/styled';
-
+import PropTypes from 'prop-types';
 import Error from './Error';
 import useCurrency from '../hooks/useCurrency';
 import useCrypto from '../hooks/useCrypto';
@@ -24,7 +24,7 @@ const Button = styled.input`
     }
 `;
 
-const Form = () => {
+const Form = ({ setCrypto, setCurrency }) => {
 
     // state for crypto list
     const [cryptoList, setCryptoList] = useState([]);
@@ -64,6 +64,8 @@ const Form = () => {
         setError(false);
 
         //Send data to main component
+        setCurrency(currency);
+        setCrypto(crypto);
 
     }
 
@@ -84,6 +86,11 @@ const Form = () => {
             />
         </form>
     );
+}
+
+Form.propTypes = {
+    setCrypto: PropTypes.func.isRequired,
+    setCurrency: PropTypes.func.isRequired
 }
  
 export default Form;
