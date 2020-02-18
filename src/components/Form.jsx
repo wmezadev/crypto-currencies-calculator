@@ -44,7 +44,7 @@ const Form = ({ setCrypto, setCurrency }) => {
     
     const CURRENCIES = [
         { code: 'USD', name: 'USA Dollar' },
-        { code: 'COL', name: 'Colombian Peso' },
+        { code: 'COP', name: 'Colombian Peso' },
         { code: 'BRL', name: 'Brazilian real' },
         { code: 'CLP', name: 'Chilean peso' },
         { code: 'PEN', name: 'Peruvian sol' },

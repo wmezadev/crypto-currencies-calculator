@@ -4,6 +4,7 @@ import axios from 'axios';
 import image from './crypto-coins.png'
 import Form from './components/Form';
 import Quotation from './components/Quotation';
+import Spinner from './components/Spinner';
 
 const Container = styled.div`
   max-width: 900px;
@@ -49,26 +50,33 @@ function App() {
     const quoteCryptocurrency = async () => {
       // avoid executes on first load time
       if(currency === '') return;
-  
-      // fetch quotation API
-      const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${crypto}&tsyms=${currency}`;
-      const result = await axios.get(url);
-
       // show spinner
       // set the state of loading
-      await setLoading(false);
-      // set quotation
-      await setResult(result.data.DISPLAY[crypto][currency]);
-
-
+      setLoading(true);
+      try {
+        // fetch quotation API
+        const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${crypto}&tsyms=${currency}`; 
+        const result = await axios.get(url);
+        // set quotation
+        setResult(result.data.DISPLAY[crypto][currency]);
+        setLoading(false);
+      } catch(err) {
+        console.log(err);
+        setResult({});
+        setLoading(false);
+      }
     }
 
     quoteCryptocurrency();
-  }, [currency, crypto])
+  }, [currency, crypto]);
+
+
+  const dynComponent = (loading) ? <Spinner /> :  <Quotation result={result} />;
+
   return (
     <Container>
       <div>
-        <Image src={image}/>
+        <Image src={image} alt="crypto image"/>
       </div>
       <div>
         <Heading> Cryptocurrency Quotes Instantly</Heading>
@@ -76,9 +84,7 @@ function App() {
           setCurrency={setCurrency}
           setCrypto={setCrypto}
         />
-        <Quotation
-          result={result}
-        />
+        {dynComponent}
       </div>
     </Container>
   );
